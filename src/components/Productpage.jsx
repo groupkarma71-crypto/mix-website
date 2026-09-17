@@ -134,22 +134,22 @@ function Productpage({ data }) {
   };
 
   const sellerNames = [
-    'CLOTHING STUDIO',
-    'FASHION FUSION',
-    'LIVAA',
-    'LIVASS',
-    'MADHUBANI',
-    'SHAGUNS',
-    'GORI PRIYAA',
-    'RIVANAA',
-    'RINAZ CLOTH',
-    'KIARA CLOTHING',
-    'CULTURE CLOTH',
-    'KRITI WEAR',
-    'AMERICAN AEPRO',
-    'KORIEN OUTFIT',
-    'AMORE',
-    'SILK RAAGG',
+    'meesho official',
+    'meesho official',
+    'meesho official',
+    'meesho official',
+    'meesho official',
+    'meesho official',
+    'meesho official',
+    'meesho official',
+    'meesho official',
+    'meesho official',
+    'meesho official',
+    'meesho official',
+    'meesho official',
+    'meesho official',
+    'meesho official',
+    'meesho official',
   ];
 
   const reviewsProduct = [
@@ -162,11 +162,10 @@ function Productpage({ data }) {
     { text: "👌🏻👌🏻fast shipping best price & quality" },
     { text: "💥💥Thank you flipkart best experiance" },
     { text: "killer products,best quality" },
-    { text: "🥳🥳🥳fit size and awesome products" },
-    { text: "🔥🔥🔥simple and sober collection" },
+    { text: "🥳🥳🥳awesome products" },
     { text: "🥰🥰best from other 🥰🥰" },
-    { text: "⚡⚡best in shopping thank you flipkart" },
-    { text: "❤️❤️❤️loved products & size aewsome" },
+    { text: "⚡⚡best in shopping thank you Meesho" },
+    { text: "❤️❤️❤️loved products" },
     { text: "best product ever" },
     { text: "5/5 ratings best products" },
     { text: "😙quality is good😙😙" },
@@ -365,12 +364,12 @@ function Productpage({ data }) {
               })}
           </Swiper>
         </div>
-        <div className="pt-[16px] px-[15px]">
+        {/* <div className="pt-[16px] px-[15px]">
           <p className="text-[#8b8ba3] text-[15px] font-bold">
-            6 Similar Products
+            1 Similar Products
           </p>
           <div className="mt-[10px] w-full relative">
-            <Swiper ref={silderrefdata} slidesPerView={5} spaceBetween={8}>
+            <Swiper ref={silderrefdata} slidesPerView={1} spaceBetween={8}>
               {filtersimilarproduct?.map((dataimg, inx) => {
                 return (
                   <SwiperSlide key={inx}>
@@ -388,7 +387,7 @@ function Productpage({ data }) {
               })}
             </Swiper>
           </div>
-        </div>
+        </div> */}
         <div className="bg-[rgb(234_234_242)] pb-2 w-full">
           <div className="w-full pt-[8px] px-[16px] bg-white pb-[18px]">
             <div

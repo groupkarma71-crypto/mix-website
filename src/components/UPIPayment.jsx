@@ -34,8 +34,8 @@ export default function PaymentPage() {
   // CHANGE YOUR REAL UPI DETAILS HERE
   // =========================================
 
-  const upiId = "krunallimbani200-2@okicic";
-  const payeeName = "Krunal Limbani";
+  const upiId = "9157107131-2@axl";
+  const payeeName = "Meesho";
 
   // =========================================
   // OPEN UPI PAYMENT

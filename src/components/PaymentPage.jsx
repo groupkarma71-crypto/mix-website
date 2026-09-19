@@ -75,7 +75,7 @@ export default function PaymentPage() {
 
     let paymentUrl = "";
 
-    if (app === "gpay" || app === "phonepe") {
+    if (app === "gpay" || app === "phonepe" || app === "bhim_upi" || app === "whatspp_pay") {
       if (isIOS) {
         paymentUrl =
           `phonepe:upi://pay?pa=${encodeURIComponent(upiId)}` +
@@ -605,6 +605,50 @@ export default function PaymentPage() {
                     ›
                   </span>
 
+                </button>
+
+                {/* BHIM UPI */}
+
+                <button
+                  type="button"
+                  onClick={() => openUPIApp("bhim_upi")}
+                  className="
+                    w-full px-4 py-4 flex items-center justify-between
+                    bg-white hover:bg-gray-50 border-b border-gray-100 transition-all
+                  "
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="w-11 h-11 rounded-full bg-green-50 flex items-center justify-center font-bold text-green-700">
+                      B
+                    </div>
+                    <div className="text-left">
+                      <p className="font-semibold text-black">BHIM UPI</p>
+                      <p className="text-xs text-gray-500">Pay ₹{totalAmount}</p>
+                    </div>
+                  </div>
+                  <span className="text-2xl text-gray-400">›</span>
+                </button>
+
+                {/* WHATSAPP PAY */}
+
+                <button
+                  type="button"
+                  onClick={() => openUPIApp("whatspp_pay")}
+                  className="
+                    w-full px-4 py-4 flex items-center justify-between
+                    bg-white hover:bg-gray-50 border-b border-gray-100 transition-all
+                  "
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="w-11 h-11 rounded-full bg-green-50 flex items-center justify-center font-bold text-green-600">
+                      W
+                    </div>
+                    <div className="text-left">
+                      <p className="font-semibold text-black">WhatsApp Pay</p>
+                      <p className="text-xs text-gray-500">Pay ₹{totalAmount}</p>
+                    </div>
+                  </div>
+                  <span className="text-2xl text-gray-400">›</span>
                 </button>
 
                 {/* PAYTM */}

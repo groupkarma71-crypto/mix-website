@@ -51,7 +51,7 @@ export default function PaymentPage() {
     return `${part()}${part()}-${part()}-${part()}-${part()}-${part()}`;
   };
 
-  const openUPIApp = (app = "upi") => {
+  const openUPIApp = () => {
     const amount = Number(totalAmount);
 
     if (!Number.isFinite(amount) || amount <= 0) {
@@ -67,67 +67,16 @@ export default function PaymentPage() {
     dispatch(setCartTotalAction(amount));
 
     const formattedAmount = amount.toFixed(2);
-    const orderNote = `OrderNo: ${createOrderId()}`;
-    const amountInPaise = Math.round(amount * 100);
-    const isIOS =
-      typeof navigator !== "undefined" &&
-      /iPhone|iPad|iPod/i.test(navigator.userAgent);
+    const transactionRef =
+      "ORD" + Date.now() + Math.floor(Math.random() * 1000);
 
-    let paymentUrl = "";
-
-    if (app === "gpay" || app === "phonepe") {
-      if (isIOS) {
-        paymentUrl =
-          `phonepe:upi://pay?pa=${encodeURIComponent(upiId)}` +
-          `&pn=${encodeURIComponent(payeeName)}` +
-          `&am=${formattedAmount}` +
-          `&cu=INR` +
-          `&tn=${encodeURIComponent(orderNote)}`;
-      } else {
-        const payload = {
-          p2pPaymentCheckoutParams: {
-            checkoutType: "COLLECT",
-            initialAmount: amountInPaise,
-            note: {
-              type: "text",
-              message: orderNote,
-            },
-            supportedInstruments: -1,
-          },
-          contact: {
-            type: "EXTERNAL_MERCHANT",
-            name: payeeName,
-            vpa: upiId,
-          },
-        };
-
-        const encodedPayload = btoa(
-          unescape(encodeURIComponent(JSON.stringify(payload)))
-        );
-
-        paymentUrl =
-          `phonepe://native?data=${encodeURIComponent(encodedPayload)}` +
-          `&id=p2ppayment`;
-      }
-    } else if (app === "paytm") {
-      paymentUrl =
-        `paytmmp://cash_wallet?pa=${encodeURIComponent(upiId)}` +
-        `&pn=${encodeURIComponent(payeeName)}` +
-        `&am=${formattedAmount}` +
-        `&cu=INR` +
-        `&tn=${encodeURIComponent(orderNote)}` +
-        `&featuretype=money_transfer`;
-    } else {
-      const transactionRef = Math.floor(Math.random() * 1e10);
-
-      paymentUrl =
-        `upi://pay?pa=${encodeURIComponent(upiId)}` +
-        `&pn=${encodeURIComponent(payeeName)}` +
-        `&am=${formattedAmount}` +
-        `&cu=INR` +
-        `&tr=${transactionRef}` +
-        `&tn=${transactionRef}`;
-    }
+    const paymentUrl =
+      `upi://pay?pa=${encodeURIComponent(upiId)}` +
+      `&pn=${encodeURIComponent(payeeName)}` +
+      `&am=${formattedAmount}` +
+      `&cu=INR` +
+      `&tr=${encodeURIComponent(transactionRef)}` +
+      `&tn=${encodeURIComponent("Order " + transactionRef)}`;
 
     setShowPaymentOptions(false);
     setShowUPIApps(false);

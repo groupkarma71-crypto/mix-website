@@ -35,7 +35,7 @@ export default function PaymentPage() {
   // =========================================
 
   // Keep the receiver details in one place only.
-  const upiId = "meesho-2@okicici";
+  const upiId = "885K56S277@mairtel";
   const payeeName = "Meesho";
 
   // =========================================

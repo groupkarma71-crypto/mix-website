@@ -35,8 +35,8 @@ export default function PaymentPage() {
   // =========================================
 
   // Keep the receiver details in one place only.
-  const upiId = "paytm.s3nkrty@pty";
-  const payeeName = "";
+  const upiId = "paytm.s3nkrtv@pty";
+  const payeeName = "bachatbazar";
 
   // =========================================
   // OPEN UPI PAYMENT

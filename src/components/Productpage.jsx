@@ -27,6 +27,7 @@ function Productpage({ data }) {
   const [buynowyn, setbuynowyn] = useState(false);
   const [randomReviews, setRandomReviews] = useState([]);
   const [vendorName, setVendorName] = useState('');
+  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const reatingtextandcolor = [
     { name: "Excellent", num: 2717, color: "#06A759", width: "43%" },
     { name: "Very Good", num: 1342, color: "#06A759", width: "21%" },
@@ -78,6 +79,7 @@ function Productpage({ data }) {
     const filterdata = apiData?.filter((dataf) => dataf?.id === id);
     setfilterdata(filterdata);
     setSelecedSize(filterdata[0]?.size[0]);
+    setSelectedImageIndex(0);
     localStorage.setItem("idname", JSON.stringify({ id, name }));
   }, [id, name, apiData?.length]);
   const similerproductclick = (id, name) => {
@@ -348,21 +350,48 @@ function Productpage({ data }) {
     <>
       <div className="w-full">
         <div>
-          <Swiper slidesPerView={1} spaceBetween={0}>
-            {filterdata?.length > 0 &&
-              filterdata[0]?.image?.map((dataimg, inx) => {
-                return (
-                  <SwiperSlide key={inx}>
-                    <div className="flex justify-center items-center w-full">
-                      <LazyImage
-                        src={dataimg}
-                        className="w-auto max-h-[320px] h-full object-cover"
-                      />
+          {/* PRODUCT MAIN IMAGE + DYNAMIC THUMBNAILS */}
+          {filterdata?.length > 0 && Array.isArray(filterdata[0]?.image) && (
+            <div className="w-full bg-white">
+              <div className="w-full flex justify-center items-center px-2 pt-2">
+                <LazyImage
+                  src={filterdata[0]?.image?.[selectedImageIndex]}
+                  className="w-full max-h-[520px] h-auto object-contain"
+                />
+              </div>
+
+              {filterdata[0]?.image?.length > 0 && (
+                <div className="px-[16px] pt-[14px] pb-[16px]">
+                  <p className="text-[14px] text-[#353543] font-[500] mb-[12px]">
+                    {filterdata[0]?.image?.length} Product Images & Styles
+                  </p>
+
+                  <div className="w-full border-t border-[#e5e5e5] pt-[12px]">
+                    <div className="flex gap-[10px] overflow-x-auto pb-1"
+                         style={{ scrollbarWidth: "none" }}>
+                      {filterdata[0]?.image?.map((img, index) => (
+                        <button
+                          type="button"
+                          key={index}
+                          onClick={() => setSelectedImageIndex(index)}
+                          className={`shrink-0 w-[60px] h-[60px] rounded-[8px] overflow-hidden bg-white ${
+                            selectedImageIndex === index
+                              ? "border-2 border-[#9f2089]"
+                              : "border border-[#d9d9d9]"
+                          }`}
+                        >
+                          <LazyImage
+                            src={img}
+                            className="w-full h-full object-cover"
+                          />
+                        </button>
+                      ))}
                     </div>
-                  </SwiperSlide>
-                );
-              })}
-          </Swiper>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
         </div>
         {/* <div className="pt-[16px] px-[15px]">
           <p className="text-[#8b8ba3] text-[15px] font-bold">
@@ -886,11 +915,20 @@ function Productpage({ data }) {
                   </div>
                   <div className="mt-[12px] w-full flex justify-start flex-wrap items-center gap-2">
                     {filterdata?.length > 0 &&
-                      filterdata[0]?.image?.map((dataimagesf) => {
+                      filterdata[0]?.image?.length > 0 &&
+                      [0, 1].map((offset) => {
+                        const images = filterdata[0].image;
+                        const imageIndex =
+                          (index * 2 + offset) % images.length;
+                        const reviewImage = images[imageIndex];
+
                         return (
-                          <div className="w-[48px] h-[48px] overflow-hidden rounded">
+                          <div
+                            key={`${index}-${imageIndex}-${offset}`}
+                            className="w-[48px] h-[48px] overflow-hidden rounded"
+                          >
                             <LazyImage
-                              src={dataimagesf}
+                              src={reviewImage}
                               className="w-full h-full object-cover aspect-square"
                             />
                           </div>

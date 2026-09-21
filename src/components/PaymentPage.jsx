@@ -35,8 +35,8 @@ export default function PaymentPage() {
   // =========================================
 
   // Keep the receiver details in one place only.
-  const upiId = "885K56S277@mairtel";
-  const payeeName = "Meesho";
+  const upiId = "paytm.s3nkrty@pty";
+  const payeeName = "";
 
   // =========================================
   // OPEN UPI PAYMENT

@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
-
+import thustedimg from "../images/thrustedimg2.png";
 import "swiper/css";
 
 /* =========================================================
@@ -388,7 +388,9 @@ function CategoryPage({ data = [] }) {
           background: #a90082;
           white-space: nowrap;
         }
-
+article.group.relative.cursor-pointer.border-b.border-r.border-gray-200.bg-white.p-\[8px\].transition.hover\:z-10.hover\:shadow-md.md\:p-\[12px\] .mt-\[8px\].flex.items-center.gap-\[4px\] {
+    justify-content: space-between;
+}
 
         .sale-marquee-track {
           display: flex;
@@ -1333,7 +1335,7 @@ function CategoryPage({ data = [] }) {
                           gap-[4px]
                         "
                       >
-
+<div>
                         <span
                           className="
                             inline-flex
@@ -1376,7 +1378,12 @@ function CategoryPage({ data = [] }) {
                           ).toLocaleString()}
                           )
                         </span>
-
+                        </div>
+ <img
+                      src={thustedimg}
+                      alt=""
+                      className="h-[18px] max-w-[55px] object-contain md:h-[21px]"
+                    />
                       </div>
 
                     </div>

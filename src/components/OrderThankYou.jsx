@@ -15,11 +15,6 @@ export default function OrderThankYou() {
         <h1 className="text-2xl font-bold text-[#25252d] mt-4">Thank You!</h1>
         <p className="text-sm text-[#616173] mt-2">Your payment completion has been recorded.</p>
 
-        <div className="border border-[#e1e1ea] rounded-xl mt-6 text-left overflow-hidden">
-          <div className="flex justify-between p-3 border-b"><span>Order ID</span><b>{orderId}</b></div>
-          <div className="flex justify-between p-3 border-b"><span>Payment</span><b>{method}</b></div>
-          <div className="flex justify-between p-3"><span>Order Total</span><b>₹{amount}</b></div>
-        </div>
 
         <p className="text-xs text-[#6d5925] bg-[#fff8e8] p-3 rounded-lg mt-4">
           Payment status is based on your confirmation. Keep your UPI receipt for reference.

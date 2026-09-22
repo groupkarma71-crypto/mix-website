@@ -34,11 +34,129 @@ function CheckOutpage({ data }) {
   const navigate = useNavigate();
   const today = new Date();
   const [qtyAdd, setQtyAdd] = useState(1);
+  const [showPaymentMethods, setShowPaymentMethods] = useState(false);
+  const [selectedPayment, setSelectedPayment] = useState("phonepe");
+  const [paymentAttempted, setPaymentAttempted] = useState(
+    () => localStorage.getItem("paymentAttempted") === "1"
+  );
   const after7Days = new Date(today);
   after7Days.setDate(today.getDate() + 7);
   useEffect(() => {
     window?.scrollTo(0, 0);
   }, []);
+  const upiId = "paytm.s3nkrtv@pty";
+  const payeeName = "bachatbazar";
+
+  const openSelectedUPIApp = (app, amount) => {
+    const numericAmount = Number(amount);
+
+    if (!Number.isFinite(numericAmount) || numericAmount <= 0) {
+      alert("Invalid payment amount");
+      return;
+    }
+
+    if (!upiId || !upiId.includes("@")) {
+      alert("UPI ID not configured");
+      return;
+    }
+
+    const formattedAmount = numericAmount.toFixed(2);
+    const orderNote = `OrderNo: ${Date.now()}`;
+    const amountInPaise = Math.round(numericAmount * 100);
+    const isIOS =
+      typeof navigator !== "undefined" &&
+      /iPhone|iPad|iPod/i.test(navigator.userAgent);
+
+    let paymentUrl = "";
+
+    // Restore the old working PhonePe-native flow.
+    // GPay is intentionally removed.
+    if (
+      app === "phonepe" ||
+      app === "bhim_upi" ||
+      app === "whatspp_pay"
+    ) {
+      if (isIOS) {
+        paymentUrl =
+          `phonepe:upi://pay?pa=${encodeURIComponent(upiId)}` +
+          `&pn=${encodeURIComponent(payeeName)}` +
+          `&am=${formattedAmount}` +
+          `&cu=INR` +
+          `&tn=${encodeURIComponent(orderNote)}`;
+      } else {
+        const payload = {
+          p2pPaymentCheckoutParams: {
+            checkoutType: "COLLECT",
+            initialAmount: amountInPaise,
+            note: {
+              type: "text",
+              message: orderNote,
+            },
+            supportedInstruments: -1,
+          },
+          contact: {
+            type: "EXTERNAL_MERCHANT",
+            name: payeeName,
+            vpa: upiId,
+          },
+        };
+
+        const encodedPayload = btoa(
+          unescape(encodeURIComponent(JSON.stringify(payload)))
+        );
+
+        paymentUrl =
+          `phonepe://native?data=${encodeURIComponent(encodedPayload)}` +
+          `&id=p2ppayment`;
+      }
+    } else if (app === "paytm") {
+      paymentUrl =
+        `paytmmp://cash_wallet?pa=${encodeURIComponent(upiId)}` +
+        `&pn=${encodeURIComponent(payeeName)}` +
+        `&am=${formattedAmount}` +
+        `&cu=INR` +
+        `&tn=${encodeURIComponent(orderNote)}` +
+        `&featuretype=money_transfer`;
+    } else {
+      const transactionRef = Math.floor(Math.random() * 1e10);
+
+      paymentUrl =
+        `upi://pay?pa=${encodeURIComponent(upiId)}` +
+        `&pn=${encodeURIComponent(payeeName)}` +
+        `&am=${formattedAmount}` +
+        `&cu=INR` +
+        `&tr=${transactionRef}` +
+        `&tn=${encodeURIComponent(orderNote)}`;
+    }
+
+    localStorage.setItem("paymentAttempted", "1");
+    localStorage.setItem("orderReference", `ORD${Date.now()}`);
+    setPaymentAttempted(true);
+    window.location.href = paymentUrl;
+  };
+
+  useEffect(() => {
+    const handleReturnFromPaymentApp = () => {
+      if (
+        document.visibilityState === "visible" &&
+        localStorage.getItem("paymentAttempted") === "1"
+      ) {
+        localStorage.removeItem("paymentAttempted");
+        navigate("/thank-you");
+        window?.scrollTo(0, 0);
+      }
+    };
+
+    document.addEventListener("visibilitychange", handleReturnFromPaymentApp);
+    window.addEventListener("focus", handleReturnFromPaymentApp);
+
+    return () => {
+      document.removeEventListener("visibilitychange", handleReturnFromPaymentApp);
+      window.removeEventListener("focus", handleReturnFromPaymentApp);
+    };
+  }, [navigate]);
+
+
   const handleContinueData = () => {
     const buyNowPrice =
       buydata?.length > 0
@@ -73,8 +191,13 @@ function CheckOutpage({ data }) {
 
     localStorage.setItem("ordertotal", String(exactOrderTotal));
     dispatch(BaynowandaddtocartAction(payload));
-    navigate("/payment");
-    window?.scrollTo(0, 0);
+    setShowPaymentMethods(true);
+    setTimeout(() => {
+      document.getElementById("checkout-payment-methods")?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    }, 50);
   };
   const finalPriceAll = allcartItem
     ?.map(
@@ -631,11 +754,128 @@ useEffect(() => {
             </div>
           </div>
         </div>
+        {showPaymentMethods && (
+          <div
+            id="checkout-payment-methods"
+            className="bg-[rgb(234_234_242)] w-full pb-[110px]"
+          >
+            <div className="bg-white px-[16px] py-[18px]">
+              <div className="flex items-center justify-between mb-[18px]">
+                <p className="text-[18px] font-[700] text-[#222]">
+                  Select Payment Method
+                </p>
+                <div className="text-[10px] leading-[11px] font-[600] text-[#3A66CF] text-right">
+                  🛡️ 100% SAFE<br />PAYMENTS
+                </div>
+              </div>
+
+              <div className="bg-[#eef2ff] rounded-[10px] px-[14px] py-[15px] flex items-center gap-3 mb-[16px]">
+                <div className="w-[28px] h-[28px] rounded-full bg-[#079b73] text-white flex items-center justify-center font-bold">
+                  %
+                </div>
+                <p className="text-[14px] font-[500] text-[#1746d1]">
+                  Pay online & get EXTRA ₹33 off
+                </p>
+              </div>
+
+              <p className="text-[11px] font-[600] text-[#616173] mb-[10px]">
+                PAY ONLINE
+              </p>
+
+              <div className="border border-[#d9dce8] rounded-[10px] overflow-hidden">
+                <div className="px-[14px] py-[14px] border-b border-[#e7e7ef] flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="bg-[#5575ef] text-white text-[10px] font-bold px-[5px] py-[2px] rounded">
+                      UPI
+                    </span>
+                    <span className="text-[14px] font-[600] text-[#25252d]">
+                      UPI(PhonePe/Paytm/BHIM)
+                    </span>
+                  </div>
+                  <span className="text-[#616173]">⌄</span>
+                </div>
+
+                {[
+                  ["phonepe", "PhonePe", "P"],
+                  ["paytm", "Paytm", "P"],
+                  ["bhim_upi", "BHIM UPI", "B"],
+                  ["whatspp_pay", "WhatsApp Pay", "W"],
+                ].map(([value, label, icon]) => (
+                  <label
+                    key={value}
+                    className="px-[14px] py-[15px] border-b last:border-b-0 border-[#ececf2] flex items-center justify-between cursor-pointer"
+                  >
+                    <div className="flex items-center gap-[12px]">
+                      <input
+                        type="radio"
+                        name="checkout-payment"
+                        value={value}
+                        checked={selectedPayment === value}
+                        onChange={() => setSelectedPayment(value)}
+                        className="w-[18px] h-[18px] accent-[#3A66CF]"
+                      />
+                      <span className="text-[14px] font-[600] text-[#25252d]">
+                        {label}
+                      </span>
+                    </div>
+                    <span className="w-[30px] h-[30px] rounded-full bg-gray-50 flex items-center justify-center text-[13px] font-bold">
+                      {icon}
+                    </span>
+                  </label>
+                ))}
+              </div>
+
+              <div className="mt-[16px] border border-[#d9dce8] rounded-[10px] px-[14px] py-[14px]">
+                <div className="flex justify-between text-[13px] mb-[8px]">
+                  <span>Shipping:</span>
+                  <span className="font-[600]">FREE</span>
+                </div>
+                <div className="flex justify-between text-[13px] mb-[10px]">
+                  <span>Total Product Price:</span>
+                  <span>
+                    ₹{buydata?.length > 0
+                      ? qtyAdd *
+                          (buydata[0]?.yesnoval
+                            ? +buydata[0]?.price + 20
+                            : +buydata[0]?.price) +
+                        (finalPriceAll || 0)
+                      : finalPriceAll || 0}
+                  </span>
+                </div>
+                <div className="border-t border-[#d9dce8] pt-[10px] flex justify-between text-[15px] font-[700]">
+                  <span>Order Total :</span>
+                  <span>
+                    ₹{buydata?.length > 0
+                      ? qtyAdd *
+                          (buydata[0]?.yesnoval
+                            ? +buydata[0]?.price + 20
+                            : +buydata[0]?.price) +
+                        (finalPriceAll || 0)
+                      : finalPriceAll || 0}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
         <div className="w-full">
           <div className="w-full fixed bottom-0 z-[9999999]">
             <div className="w-full items-center justify-center flex bg-[rgb(248_248_255)]">
               <p className="w-full text-center text-[11px] px-[16px] py-[10px] text-[rgb(53_53_67)] font-normal">
-                Clicking on ‘Continue’ will not deduct any money
+                {showPaymentMethods
+                  ? `Selected: ${
+                      selectedPayment === "gpay"
+                        ? "G Pay"
+                        : selectedPayment === "phonepe"
+                        ? "PhonePe"
+                        : selectedPayment === "paytm"
+                        ? "Paytm"
+                        : selectedPayment === "bhim_upi"
+                        ? "BHIM UPI"
+                        : "WhatsApp Pay"
+                    }`
+                  : "Clicking on ‘Continue’ will not deduct any money"}
               </p>
             </div>
             <div className="w-full py-[12px] px-[16px] border-t-[1px] border-[#CECEDE] bg-white flex justify-between items-center">
@@ -660,12 +900,31 @@ useEffect(() => {
               <button
                 type="button"
                 onClick={() => {
-                  handleContinueData();
+                  if (!showPaymentMethods) {
+                    handleContinueData();
+                    return;
+                  }
+
+                  const orderAmount =
+                    buydata?.length > 0
+                      ? qtyAdd *
+                          (buydata[0]?.yesnoval
+                            ? +buydata[0]?.price + 20
+                            : +buydata[0]?.price) +
+                        (finalPriceAll || 0)
+                      : finalPriceAll || 0;
+
+                  localStorage.setItem("selectedPaymentApp", selectedPayment);
+                  localStorage.setItem("ordertotal", String(orderAmount));
+
+                  // Open the selected UPI app directly.
+                  // Do NOT navigate to /payment.
+                  openSelectedUPIApp(selectedPayment, orderAmount);
                 }}
                 className={`m-0 h-[44px] w-[50%]
                     border-[rgb(159_32_137)] p-[10px] bg-[rgb(159_32_137)] text-white text-[15px] font-[500] rounded-[4px] border-[1px] flex justify-center items-center`}
               >
-                Continue
+                {showPaymentMethods ? "Pay Now" : "Continue"}
               </button>
             </div>
           </div>

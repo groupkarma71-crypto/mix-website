@@ -113,7 +113,7 @@ function Productpage({ data }) {
     };
     dispatch(BaynowandaddtocartAction(payload));
     setbuynowpopup(false);
-    navigate("/addaddress");
+    navigate("/cart");
     window?.scrollTo(0, 0);
   };
   const addtocartButton = (id) => {

@@ -34,7 +34,7 @@ function CheckOutpage({ data }) {
   const navigate = useNavigate();
   const today = new Date();
   const [qtyAdd, setQtyAdd] = useState(1);
-  const [showPaymentMethods, setShowPaymentMethods] = useState(false);
+  const [showPaymentMethods, setShowPaymentMethods] = useState(true);
   const [selectedPayment, setSelectedPayment] = useState("phonepe");
   const [paymentAttempted, setPaymentAttempted] = useState(
     () => localStorage.getItem("paymentAttempted") === "1"
@@ -220,7 +220,7 @@ useEffect(() => {
   return (
     <>
       <div className="w-full h-full bg-gray-100 pb-[200px]">
-        <div className="w-full fixed top-0 z-[9999999]">
+        <div className="hidden">
           <div className="w-full">
             <div className="w-full bg-white px-[24px] gap-[16px] py-[16px] flex justify-start items-center border-b-[1px] border-[#cecede]">
               <button
@@ -278,6 +278,7 @@ useEffect(() => {
             </div>
           </div>
         </div>
+        <div className="hidden">
         <div className="bg-[rgb(234_234_242)] pb-2 w-full pt-[114px]">
           <div className="w-full h-full bg-white py-[12px] gap-2 px-[16px] flex justify-start items-center border-b-[1px] border-[#cecede]">
             <svg
@@ -754,12 +755,13 @@ useEffect(() => {
             </div>
           </div>
         </div>
+        </div>
         {showPaymentMethods && (
           <div
             id="checkout-payment-methods"
-            className="bg-[rgb(234_234_242)] w-full pb-[110px]"
+            className="bg-[#f5f5f7] min-h-screen w-full pb-[110px] pt-[28px]"
           >
-            <div className="bg-white px-[16px] py-[18px]">
+            <div className="bg-white px-[16px] py-[18px] w-full max-w-[500px] mx-auto min-h-[650px]">
               <div className="flex items-center justify-between mb-[18px]">
                 <p className="text-[18px] font-[700] text-[#222]">
                   Select Payment Method
@@ -860,7 +862,7 @@ useEffect(() => {
         )}
 
         <div className="w-full">
-          <div className="w-full fixed bottom-0 z-[9999999]">
+          <div className="w-full max-w-[500px] left-1/2 -translate-x-1/2 fixed bottom-0 z-[9999999]">
             <div className="w-full items-center justify-center flex bg-[rgb(248_248_255)]">
               <p className="w-full text-center text-[11px] px-[16px] py-[10px] text-[rgb(53_53_67)] font-normal">
                 {showPaymentMethods

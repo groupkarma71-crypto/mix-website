@@ -5,6 +5,14 @@ import { Formik, useFormik, Form } from "formik";
 import * as Yup from "yup";
 import { addressdataAction } from "../redux/actions/Addressdata.action";
 import axios from "axios";
+<style>{`
+
+        .w-full.py-\[12px\].px-\[16px\].border-t-\[1px\].border-\[\#CECEDE\].bg-white.flex.justify-between.items-center.fixed.bottom-0.z-\[9999999\] {
+    max-width: 360px;
+    position: relative;
+}
+
+      `}</style>
 function AddAddresspage() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -72,13 +80,13 @@ function AddAddresspage() {
   };
   return (
     <>
-      <div className="w-full h-full pb-[200px] bg-gray-100">
+      <div className="w-full min-h-screen pb-[100px] bg-[#f5f5f7]"><div className="w-full max-w-[500px] mx-auto min-h-screen bg-white">
         <Formik value={formik}>
           <Form onSubmit={handleSubmit}>
             <div className="w-full bg-white p-[16px] flex justify-start items-center">
               <button
                 onClick={() => {
-                  navigate("/productdetails/" + JSON.parse(localstoageid)?.id + "/" + JSON.parse(localstoageid)?.name);
+                  navigate("/cart");
                 }}
                 type="button"
                 className="m-0 p-0 w-fit bg-transparent"
@@ -462,6 +470,7 @@ function AddAddresspage() {
             </div>
           </Form>
         </Formik>
+        </div>
       </div>
     </>
   );

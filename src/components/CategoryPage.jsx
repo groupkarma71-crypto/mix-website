@@ -174,29 +174,7 @@ function CategoryPage({ data = [] }) {
   };
 
   const getProductCategory = (product) => {
-    const savedCategory = normalizeCategory(
-      product?.category
-    );
-
-    const allowedCategories = [
-      "women-ethnic",
-      "women-western",
-      "men",
-      "kids",
-      "home-kitchen",
-      "beauty-health",
-      "jewellery-accessories",
-      "bags-footwear",
-      "electronics",
-    ];
-
-    if (
-      allowedCategories.includes(
-        savedCategory
-      )
-    ) {
-      return savedCategory;
-    }
+   
 
     const text = `
       ${product?.title || ""}

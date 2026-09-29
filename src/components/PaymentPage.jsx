@@ -35,7 +35,7 @@ export default function PaymentPage() {
   // =========================================
 
   // Keep the receiver details in one place only.
-  const upiId = "bachatkart01@slc";
+  const upiId = "paytm.s3nkrtv@pty";
   const payeeName = "bachatbazar";
 
   // =========================================
